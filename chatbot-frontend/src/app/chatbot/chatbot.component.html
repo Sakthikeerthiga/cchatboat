@@ -1,0 +1,132 @@
+<div class="chatbot-container" [class]="getStateClass()">
+  <!-- Header with Reset and Minimize buttons -->
+  <div class="chatbot-header">
+    <h3>Chatbot</h3>
+    <div class="header-buttons">
+      <button class="btn btn-sm btn-outline-secondary" (click)="reset()">
+        <i class="fas fa-redo"></i> Reset
+      </button>
+      <button class="btn btn-sm btn-outline-secondary" (click)="toggleMinimize()">
+        <i class="fas fa-minus"></i> Minimize
+      </button>
+    </div>
+  </div>
+
+  <!-- Chatbot Content -->
+  <div class="chatbot-content" *ngIf="!isMinimized">
+    
+    <!-- Greeting State -->
+    <div class="state-greeting" *ngIf="currentState === 'greeting'">
+      <div class="greeting-message">
+        <p>{{ greeting }}</p>
+      </div>
+      <div class="main-buttons">
+        <button class="btn btn-primary btn-lg" (click)="showJobs()">
+          <i class="fas fa-briefcase"></i> Jobs
+        </button>
+        <button class="btn btn-success btn-lg" (click)="showClients()">
+          <i class="fas fa-users"></i> Clients
+        </button>
+      </div>
+    </div>
+
+    <!-- Jobs State -->
+    <div class="state-jobs" *ngIf="currentState === 'jobs'">
+      <div class="section-header">
+        <h4><i class="fas fa-briefcase"></i> Available Jobs</h4>
+        <div class="header-actions">
+          <button class="btn btn-outline-primary btn-sm" (click)="goBack()">
+            <i class="fas fa-home"></i> Main Menu
+          </button>
+        </div>
+      </div>
+      <div class="items-list">
+        <button 
+          *ngFor="let job of jobs" 
+          class="btn btn-outline-primary item-button"
+          (click)="selectJob(job)">
+          {{ job.name }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Clients State -->
+    <div class="state-clients" *ngIf="currentState === 'clients'">
+      <div class="section-header">
+        <h4><i class="fas fa-users"></i> Available Clients</h4>
+        <div class="header-actions">
+          <button class="btn btn-outline-primary btn-sm" (click)="goBack()">
+            <i class="fas fa-home"></i> Main Menu
+          </button>
+        </div>
+      </div>
+      <div class="items-list">
+        <button 
+          *ngFor="let client of clients" 
+          class="btn btn-outline-primary item-button"
+          (click)="selectClient(client)">
+          {{ client.name }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Questions State -->
+    <div class="state-questions" *ngIf="currentState === 'questions'">
+      <div class="section-header">
+        <h4>
+          <i class="fas" [class.fa-briefcase]="currentSelection?.type === 'job'" [class.fa-users]="currentSelection?.type === 'client'"></i>
+          {{ currentSelection?.name }} - Questions
+        </h4>
+        <div class="header-actions">
+          <button class="btn btn-outline-primary btn-sm" (click)="goBack()">
+            <i class="fas fa-home"></i> Main Menu
+          </button>
+        </div>
+      </div>
+      <div class="questions-list">
+        <div 
+          *ngFor="let question of questions; let i = index" 
+          class="question-item"
+          [style.animation-delay]="(i * 0.2) + 's'">
+          <div class="question-bubble clickable" (click)="selectQuestion(question)">
+            <strong>Q{{ i + 1 }}:</strong> {{ question.name }}
+            <div class="click-hint">
+              <i class="fas fa-hand-pointer"></i> Click to see answer
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Answer State -->
+    <div class="state-answer" *ngIf="currentState === 'answer' && selectedQuestion">
+      <div class="section-header">
+        <h4>
+          <i class="fas fa-question-circle"></i>
+          Question & Answer
+        </h4>
+        <div class="header-actions">
+          <button class="btn btn-outline-secondary btn-sm" (click)="goBack()">
+            <i class="fas fa-arrow-left"></i> Back to Questions
+          </button>
+        </div>
+      </div>
+      <div class="answer-content">
+        <div class="question-display">
+          <h5><i class="fas fa-question"></i> Question:</h5>
+          <p>{{ selectedQuestion.name }}</p>
+        </div>
+        <div class="answer-display">
+          <h5><i class="fas fa-comment"></i> Answer:</h5>
+          <p>{{ selectedQuestion.answer }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Minimized State - Click to restore -->
+  <div class="minimized-chatbot" *ngIf="isMinimized" (click)="toggleMinimize()">
+    <i class="fas fa-comments"></i>
+    <span>Chat</span>
+  </div>
+</div>
