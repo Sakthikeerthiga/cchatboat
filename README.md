@@ -1,4 +1,4 @@
-# ChatBoat - Full-Stack Chatbot System
+cchatboat sk
 
 A modern chatbot system built with Python FastAPI backend and Angular 16+ frontend, featuring interactive job and client management with dynamic question generation.
 
